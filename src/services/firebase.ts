@@ -11,20 +11,12 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-
-// Initialize and export Auth
 export const auth = getAuth(app);
 
-// Initialize and export Firestore with long-polling and explicit default DB
-export const db = initializeFirestore(
-  app,
-  {
-    experimentalForceLongPolling: true,
-    useFetchStreams: false,
-  },
-  '(default)'
-);
+// Use long-polling only, without unsupported flags
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true
+}, '(default)');
 
 export default app;
