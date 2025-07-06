@@ -14,14 +14,13 @@ const firebaseConfig = {
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// Auth
+// Initialize Auth
 export const auth = getAuth(app);
 
-// Firestore with long-polling and explicit '(default)' database
+// Initialize Firestore with long-polling settings
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
   useFetchStreams: false
 }, '(default)');
 
 export default app;
-
