@@ -14,9 +14,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// Use long-polling only, without unsupported flags
+// Force long-polling to avoid Listen errors (thanks to community fix) :contentReference[oaicite:2]{index=2}
+
+
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true
 }, '(default)');
-
-export default app;
