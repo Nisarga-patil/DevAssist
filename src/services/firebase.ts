@@ -1,19 +1,23 @@
-// src/firebase.ts
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { initializeFirestore } from 'firebase/firestore';
 
-const app = initializeApp({
+const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY!,
   authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID!}.firebaseapp.com`,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID!,
   storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID!}.appspot.com`,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!,
   appId: import.meta.env.VITE_FIREBASE_APP_ID!,
-});
+};
 
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
+const DEFAULT_DB = '(default)'; // Replace if different
+
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true
-});
+}, DEFAULT_DB);
+
 export default app;
