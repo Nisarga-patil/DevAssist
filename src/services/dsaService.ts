@@ -14,27 +14,33 @@ import { DSAProblem } from '../types';
 export type Status = 'Not Started' | 'In Progress' | 'Completed';
 
 export class DSAService {
-  /** Fetches all user-specific DSA problems stored */
+  /** Fetch all user-specific DSA problems */
   static async getAllProblems(userId: string): Promise<DSAProblem[]> {
     const snapshot = await getDocs(
       query(collection(db, 'dsaProblems'), where('userId', '==', userId))
     );
     const arr: DSAProblem[] = [];
     snapshot.forEach(docSnap => {
-      const d = docSnap.data() as any;
+      const d = docSnap.data() as {
+        title: string;
+        status: Status;
+        timeSpent?: number;
+        dateAdded?: { toDate: () => Date };
+        dateCompleted?: { toDate: () => Date } | null;
+      };
       arr.push({
         id: docSnap.id,
         title: d.title,
-        status: d.status as Status,
-        timeSpent: d.timeSpent || 0,
-        dateAdded: d.dateAdded?.toDate() ?? undefined,
-        dateCompleted: d.dateCompleted?.toDate() ?? null
+        status: d.status,
+        timeSpent: d.timeSpent ?? 0,
+        dateAdded: d.dateAdded?.toDate(),
+        dateCompleted: d.dateCompleted ? d.dateCompleted.toDate() : null
       });
     });
     return arr;
   }
 
-  /** Fetches a map of question title → status for UI tracking */
+  /** Fetch map of title → status for UI */
   static async getProgressMap(userId: string): Promise<Record<string, Status>> {
     const snapshot = await getDocs(
       query(collection(db, 'dsaProgress'), where('userId', '==', userId))
@@ -42,12 +48,14 @@ export class DSAService {
     const map: Record<string, Status> = {};
     snapshot.forEach(docSnap => {
       const d = docSnap.data() as { title: string; status: Status };
-      map[d.title] = d.status;
+      if (d.title && d.status) {
+        map[d.title] = d.status;
+      }
     });
     return map;
   }
 
-  /** Sets or updates progress for a question title */
+  /** Set or update question status */
   static async setQuestionStatus(
     userId: string,
     title: string,
@@ -57,7 +65,12 @@ export class DSAService {
     const ref = doc(db, 'dsaProgress', id);
     await setDoc(
       ref,
-      { userId, title, status, dateUpdated: Timestamp.now() },
+      {
+        userId,
+        title,
+        status,
+        dateUpdated: Timestamp.now() // Firestore-safe timestamp
+      },
       { merge: true }
     );
   }

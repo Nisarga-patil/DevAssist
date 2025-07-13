@@ -1,13 +1,16 @@
-// User types
+// src/types/index.ts
+
 import { Timestamp } from 'firebase/firestore';
 
-
+// --- User types ---
 export interface User {
   uid: string;
   email: string;
   displayName?: string;
   createdAt: Date;
 }
+
+// --- Dashboard stats ---
 export interface DashboardStats {
   totalProblems: number;
   completedProblems: number;
@@ -16,21 +19,19 @@ export interface DashboardStats {
   coreSubjectProgress: Record<string, number>;
 }
 
-// DSA Problem types
+// --- DSA Problem types ---
 export type Status = 'Not Started' | 'In Progress' | 'Completed';
 
 export interface DSAProblem {
   id: string;
   title: string;
   status: Status;
-  timeSpent: number;
+  timeSpent: number;            // in minutes
   dateCompleted?: Date | null;
   dateAdded?: Date;
 }
 
-
-// Core Subject types
-// Add `link` to Topic
+// --- Core Subject types ---
 export interface Topic {
   id: string;
   name: string;
@@ -52,11 +53,10 @@ export interface UserProgress {
   subjectId: string;
   topicId: string;
   completed: boolean;
-  dateCompleted?: Timestamp;
+  dateCompleted?: Timestamp | null;
 }
 
-
-// Pomodoro types
+// --- Pomodoro types ---
 export interface PomodoroSession {
   id: string;
   userId: string;
@@ -75,7 +75,7 @@ export interface PomodoroStats {
   streak: number;
 }
 
-// Resume types
+// --- Resume types ---
 export interface ResumeData {
   id: string;
   userId: string;
@@ -134,13 +134,4 @@ export interface Skills {
   frameworks: string[];
   tools: string[];
   databases: string[];
-}
-
-// Dashboard stats
-export interface DashboardStats {
-  totalProblems: number;
-  completedProblems: number;
-  currentStreak: number;
-  totalFocusTime: number;
-  coreSubjectProgress: Record<string, number>;
 }

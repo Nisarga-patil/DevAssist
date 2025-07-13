@@ -11,13 +11,10 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID!,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-const DEFAULT_DB = '(default)'; // Replace if different
-
+// Force long polling to avoid transport errors
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true
-}, DEFAULT_DB);
-
-export default app;
+}, '(default)');

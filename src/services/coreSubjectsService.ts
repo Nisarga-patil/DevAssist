@@ -114,7 +114,7 @@ export class CoreSubjectsService {
           subjectId: SUBJECT_IDS[idx],
           topicId: t.id,
           completed: false,
-          dateCompleted: undefined
+          dateCompleted: null
         };
         batch.push(setDoc(doc(db, 'userProgress', `${userId}_${t.id}`), prog));
       });
@@ -152,7 +152,7 @@ export class CoreSubjectsService {
     const ref = doc(db, 'userProgress', `${userId}_${topicId}`);
     await updateDoc(ref, {
       completed,
-      dateCompleted: completed ? Timestamp.now() : undefined
+      dateCompleted: completed ? Timestamp.now() : null
     });
   }
 
